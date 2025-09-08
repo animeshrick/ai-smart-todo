@@ -2,9 +2,9 @@ from typing import Optional
 
 from rest_framework import serializers
 
-from smart_todo.tasks.models.model.task_model import Task
-from smart_todo.tasks.services.helpers import validate_string_input, validate_dateTime_input, validate_list_input
-from smart_todo.tasks.export_types.request_data_types.add_task import AddTaskRequestType
+from tasks.models.model.task_model import Task
+from tasks.services.helpers import validate_string_input, validate_dateTime_input, validate_list_input
+from tasks.export_types.request_data_types.add_task import AddTaskRequestType
 
 
 class TaskSerializer(serializers.ModelSerializer):

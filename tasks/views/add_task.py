@@ -3,9 +3,9 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from smart_todo.tasks.export_types.request_data_types.add_task import AddTaskRequestType
-from smart_todo.tasks.services.handlers.exception_handlers import ExceptionHandler
-from smart_todo.tasks.services.task_service.task_service import TaskServices
+from tasks.export_types.request_data_types.add_task import AddTaskRequestType
+from tasks.services.handlers.exception_handlers import ExceptionHandler
+from tasks.services.task_service.task_service import TaskServices
 
 
 class AddTaskView(APIView):

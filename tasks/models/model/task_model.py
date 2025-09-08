@@ -1,6 +1,6 @@
 from django.db import models
 
-from smart_todo.tasks.models.base_models.base_model import GenericBaseModel
+from tasks.models.base_models.base_model import GenericBaseModel
 
 
 class Task(GenericBaseModel):

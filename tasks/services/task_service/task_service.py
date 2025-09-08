@@ -1,8 +1,7 @@
-from smart_todo.tasks.export_types.request_data_types.add_task import AddTaskRequestType
-from smart_todo.tasks.export_types.task_export_types.export_task import ExportTask
-from smart_todo.tasks.models.model.task_model import Task
-
-from smart_todo.tasks.serializers.task_serializer import TaskSerializer
+from tasks.export_types.request_data_types.add_task import AddTaskRequestType
+from tasks.export_types.task_export_types.export_task import ExportTask
+from tasks.models.model.task_model import Task
+from tasks.serializers.task_serializer import TaskSerializer
 
 
 class TaskServices:
