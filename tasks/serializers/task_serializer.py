@@ -3,7 +3,8 @@ from typing import Optional
 from rest_framework import serializers
 
 from tasks.models.model.task_model import Task
-from tasks.services.helpers import validate_string_input, validate_dateTime_input, validate_list_input
+from tasks.services.helpers import validate_string_input, validate_dateTime_input, validate_list_input, \
+    convert_string_to_dateTime
 from tasks.export_types.request_data_types.add_task import AddTaskRequestType
 
 
@@ -48,13 +49,15 @@ class TaskSerializer(serializers.ModelSerializer):
     def create(self, data: dict) -> Task:
         if self.validate(data):
             request: AddTaskRequestType = data.get("request_data")
+            due_date = convert_string_to_dateTime(request.due_date)
+            completed_at = convert_string_to_dateTime(request.completed_at)
             # create or update a task object
             task = Task.objects.get_or_create(
                 title=request.title,
                 description=request.description,
                 category=request.category,
-                due_date=request.due_date,
-                completed_at=request.completed_at,
+                due_date=due_date,
+                completed_at=completed_at,
                 tags=request.tags,
                 is_active=True,
             )

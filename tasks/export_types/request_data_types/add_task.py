@@ -1,5 +1,4 @@
-from typing import Optional
-import datetime
+from typing import Optional, List
 from pydantic import BaseModel
 
 
@@ -8,6 +7,6 @@ class AddTaskRequestType(BaseModel):
     description: str
     category:  Optional[str] = None
     # tags are coma separated value
-    tags: Optional[str] = None
-    due_date: Optional[datetime.datetime] = None
-    completed_at: Optional[datetime.datetime] = None
+    tags: Optional[List[str]] = None
+    due_date: Optional[str] = None
+    completed_at: Optional[str] = None

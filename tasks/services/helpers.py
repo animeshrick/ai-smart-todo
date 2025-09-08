@@ -41,3 +41,11 @@ def validate_uuid_input(input_value):
         except ValueError:
             return False
     return False
+
+#  create a method to convert string "09.09.2025" to dateTime format
+def convert_string_to_dateTime(date_string):
+    from datetime import datetime
+    try:
+        return datetime.strptime(date_string, "%d.%m.%Y")
+    except ValueError:
+        return None
