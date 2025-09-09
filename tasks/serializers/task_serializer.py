@@ -16,26 +16,17 @@ class TaskSerializer(serializers.ModelSerializer):
     def validate(self, data: Optional[dict] = None) -> Optional[bool]:
         request: AddTaskRequestType = data.get("request_data")
 
-        if not request:
-            raise serializers.ValidationError(detail="Request data is required.")
-
-        if not request.title and validate_string_input(request.title):
-            raise serializers.ValidationError(detail="Title should not be empty.")
-
-        if not request.description and validate_string_input(request.description):
-            raise serializers.ValidationError(detail="Description should not be empty.")
-
-        if request.category and validate_string_input(request.category):
+        if request.category and not validate_string_input(request.category):
             raise serializers.ValidationError(detail="Category should not be empty.")
 
-        if request.due_date and validate_dateTime_input(request.due_date):
+        if request.due_date and not validate_dateTime_input(request.due_date):
             raise serializers.ValidationError(detail="Due date should not be empty.")
 
-        if request.completed_at and validate_dateTime_input(request.completed_at):
+        if request.completed_at and not validate_dateTime_input(request.completed_at):
             raise serializers.ValidationError(detail="Completed date should not be empty.")
 
-        if request.tags and validate_list_input(request.tags):
-            raise serializers.ValidationError(detail="Tags should be a list.")
+        if request.tags and not validate_list_input(request.tags):
+            raise serializers.ValidationError(detail="Tags should not be empty and must be a list.")
 
         if validate_list_input(request.tags):
             for tag in request.tags:
