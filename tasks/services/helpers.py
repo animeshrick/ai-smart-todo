@@ -1,6 +1,8 @@
 # write a method to validate a field is empty or not, return boolean
 def validate_not_empty(input_value):
-    if input_value is None or (isinstance(input_value, str) and input_value.strip() == ""):
+    if input_value is None:
+        return False
+    if isinstance(input_value, str) and input_value.strip() == "":
         return False
     return True
 
@@ -42,9 +44,12 @@ def validate_uuid_input(input_value):
             return False
     return False
 
+
 #  create a method to convert string "09.09.2025" to dateTime format
 def convert_string_to_dateTime(date_string):
     from datetime import datetime
+    if date_string is None:
+        return None
     try:
         return datetime.strptime(date_string, "%d.%m.%Y")
     except ValueError:

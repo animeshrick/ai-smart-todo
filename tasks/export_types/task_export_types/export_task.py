@@ -13,7 +13,7 @@ class ExportTask(BaseModel):
     priority: str
     category: Optional[str] = None
     tags: Optional[List[str]] = None
-    due_date: Optional[List[datetime]] = None
+    due_date: Optional[datetime] = None
     created_at: datetime
     updated_at: datetime
     completed_at: Optional[datetime] = None
@@ -23,8 +23,8 @@ class ExportTask(BaseModel):
         if not with_id:
             kwargs["id"] = None
         if kwargs.get("tags"):
-            tags_dict = kwargs["author"].model_to_dict()
-
+            tags = kwargs.get("tags", "")
+            kwargs["tags"] = [tag.strip() for tag in tags.split(",") if tag.strip()]
         super().__init__(**kwargs)
 
 
