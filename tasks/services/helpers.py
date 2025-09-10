@@ -14,6 +14,13 @@ def validate_string_input(input_value):
     return False
 
 
+# write a method to validate a string inout type inside, return boolean
+def validate_boolean_input(input_value):
+    if validate_not_empty(input_value) and isinstance(input_value, bool):
+        return True
+    return False
+
+
 # write a method to validate a dateTime input type inside, return boolean
 def validate_dateTime_input(input_value):
     from datetime import datetime
@@ -54,3 +61,24 @@ def convert_string_to_dateTime(date_string):
         return datetime.strptime(date_string, "%d.%m.%Y")
     except ValueError:
         return None
+
+
+def convert_dateTime_to_string(date_obj):
+    from datetime import datetime
+    if date_obj is None:
+        return None
+    if not isinstance(date_obj, datetime):
+        raise TypeError("Input must be a datetime object")
+    try:
+        return date_obj.strftime("%d.%m.%Y")
+    except Exception:
+        return None
+
+
+
+def suggest_closest(value, choices):
+    import difflib
+    # choices is like [("pending", "Pending"), ...]
+    valid_values = [c[0] for c in choices]
+    matches = difflib.get_close_matches(value, valid_values)
+    return matches[0] if matches else None

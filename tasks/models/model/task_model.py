@@ -1,21 +1,10 @@
 from django.db import models
 
 from tasks.models.base_models.base_model import GenericBaseModel
+from tasks.services.const import STATUS_CHOICES, PRIORITY_CHOICES
 
 
 class Task(GenericBaseModel):
-    STATUS_CHOICES = [
-        ("pending", "Pending"),
-        ("in_progress", "In Progress"),
-        ("completed", "Completed"),
-    ]
-
-    PRIORITY_CHOICES = [
-        ("low", "Low"),
-        ("medium", "Medium"),
-        ("high", "High"),
-    ]
-
     title = models.CharField(max_length=200)
     description = models.TextField()
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="pending", blank=True, null=True)
