@@ -24,6 +24,7 @@ def validate_boolean_input(input_value):
 # write a method to validate a dateTime input type inside, return boolean
 def validate_dateTime_input(input_value):
     from datetime import datetime
+
     if validate_not_empty(input_value):
         try:
             datetime.fromisoformat(input_value)
@@ -43,6 +44,7 @@ def validate_list_input(input_value):
 # validate UUID format
 def validate_uuid_input(input_value):
     import uuid
+
     if validate_not_empty(input_value):
         try:
             uuid_obj = uuid.UUID(input_value, version=4)
@@ -55,6 +57,7 @@ def validate_uuid_input(input_value):
 #  create a method to convert string "09.09.2025" to dateTime format
 def convert_string_to_dateTime(date_string):
     from datetime import datetime
+
     if date_string is None:
         return None
     try:
@@ -65,6 +68,7 @@ def convert_string_to_dateTime(date_string):
 
 def convert_dateTime_to_string(date_obj):
     from datetime import datetime
+
     if date_obj is None:
         return None
     if not isinstance(date_obj, datetime):
@@ -75,9 +79,9 @@ def convert_dateTime_to_string(date_obj):
         return None
 
 
-
 def suggest_closest(value, choices):
     import difflib
+
     # choices is like [("pending", "Pending"), ...]
     valid_values = [c[0] for c in choices]
     matches = difflib.get_close_matches(value, valid_values)

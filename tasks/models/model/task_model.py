@@ -7,8 +7,12 @@ from tasks.services.const import STATUS_CHOICES, PRIORITY_CHOICES
 class Task(GenericBaseModel):
     title = models.CharField(max_length=200)
     description = models.TextField()
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="pending", blank=True, null=True)
-    priority = models.CharField(max_length=10, choices=PRIORITY_CHOICES, default="medium", blank=True, null=True)
+    status = models.CharField(
+        max_length=20, choices=STATUS_CHOICES, default="pending", blank=True, null=True
+    )
+    priority = models.CharField(
+        max_length=10, choices=PRIORITY_CHOICES, default="medium", blank=True, null=True
+    )
     category = models.CharField(max_length=100, blank=True, null=True)
     tags = models.CharField(max_length=200, blank=True, null=True)
     due_date = models.DateTimeField(blank=True, null=True)

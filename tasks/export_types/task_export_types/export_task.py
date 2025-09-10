@@ -18,14 +18,16 @@ class ExportTask(BaseModel):
     updated_at: datetime
     completed_at: Optional[datetime] = None
     is_active: bool
-    
+
     def __init__(self, **kwargs):
         # Check if 'tags' exists and is a string in the incoming data
         if "tags" in kwargs and isinstance(kwargs.get("tags"), str):
             tags_string = kwargs["tags"]
             # Split the string, strip whitespace, and filter out empty parts.
             # This correctly turns an empty string '' into an empty list [].
-            kwargs["tags"] = [tag.strip() for tag in tags_string.split(',') if tag.strip()]
+            kwargs["tags"] = [
+                tag.strip() for tag in tags_string.split(",") if tag.strip()
+            ]
         super().__init__(**kwargs)
 
 

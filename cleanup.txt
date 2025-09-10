@@ -1,0 +1,33 @@
+------------- Automatic formatting ------------
+# Format all code (consistent style)
+black .
+
+# Sort and clean imports
+isort .
+
+------------- Linting & unused code detection -------------
+# Basic linting (uses your existing .flake8 config)
+flake8 .
+
+# Modern linting + auto-fix (can replace flake8/isort)
+ruff check . --fix
+
+# Dead code detection (be careful: Django dynamic imports may trigger false positives)
+vulture .
+
+----------- Coverage-based cleanup -------------------
+coverage run manage.py test
+coverage report -m
+
+
+------------------- One-click workflow -------------------
+
+You can combine all of this into a Makefile or a shell script like clean.sh:
+
+#!/bin/bash
+ruff check . --fix
+black .
+isort .
+vulture .
+coverage run manage.py test
+coverage report -m
