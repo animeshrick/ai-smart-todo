@@ -3,8 +3,12 @@ from typing import Optional
 from rest_framework import serializers
 
 from tasks.models.model.task_model import Task
-from tasks.services.helpers import validate_string_input, validate_dateTime_input, validate_list_input, \
-    convert_string_to_dateTime, validate_not_empty
+from tasks.services.helpers import (
+    validate_string_input,
+    validate_dateTime_input,
+    validate_list_input,
+    convert_string_to_dateTime,
+)
 from tasks.export_types.request_data_types.add_task import AddTaskRequestType
 
 
@@ -23,15 +27,21 @@ class TaskSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(detail="Due date should not be empty.")
 
         if request.completed_at and not validate_dateTime_input(request.completed_at):
-            raise serializers.ValidationError(detail="Completed date should not be empty.")
+            raise serializers.ValidationError(
+                detail="Completed date should not be empty."
+            )
 
         if request.tags and not validate_list_input(request.tags):
-            raise serializers.ValidationError(detail="Tags should not be empty and must be a list.")
+            raise serializers.ValidationError(
+                detail="Tags should not be empty and must be a list."
+            )
 
         if validate_list_input(request.tags):
             for tag in request.tags:
                 if not validate_string_input(tag):
-                    raise serializers.ValidationError(detail="Tag should not be empty and must be a string.")
+                    raise serializers.ValidationError(
+                        detail="Tag should not be empty and must be a string."
+                    )
 
         return True
 
