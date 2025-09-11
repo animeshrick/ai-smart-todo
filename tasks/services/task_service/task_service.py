@@ -106,3 +106,11 @@ class TaskServices:
         task.updated_at = timezone.now()
         task.save()
         return ExportTask(**task.model_to_dict())
+
+    @staticmethod
+    def view_task_service(task_id: str) -> dict:
+        task: Task = Task.objects.get(id=task_id, is_active=True)
+        return {
+            "message": f"`{task.title}` is fetched",
+            "data": ExportTask(**task.model_to_dict()).model_dump(),
+        }
