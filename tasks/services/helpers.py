@@ -1,4 +1,7 @@
 # write a method to validate a field is empty or not, return boolean
+from typing import Tuple
+
+
 def validate_not_empty(input_value):
     if input_value is None:
         return False
@@ -79,10 +82,10 @@ def convert_dateTime_to_string(date_obj):
         return None
 
 
-def suggest_closest(value, choices):
+def suggest_closest(value: str, choices: Tuple):
     import difflib
 
     # choices is like [("pending", "Pending"), ...]
-    valid_values = [c[0] for c in choices]
+    valid_values = [choice[0] for choice in choices]
     matches = difflib.get_close_matches(value, valid_values)
     return matches[0] if matches else None
