@@ -1,6 +1,9 @@
+from sqlite3 import DatabaseError
+from typing import Optional
+
 from tasks.export_types.request_data_types.add_task import AddTaskRequestType
 from tasks.export_types.request_data_types.edit_task import EditTaskRequestType
-from tasks.export_types.task_export_types.export_task import ExportTask
+from tasks.export_types.task_export_types.export_task import ExportTask, ExportTaskList
 from tasks.models.model.task_model import Task
 from tasks.serializers.task_serializer import TaskSerializer
 from tasks.services.const import STATUS_CHOICES, PRIORITY_CHOICES
@@ -106,3 +109,51 @@ class TaskServices:
         task.updated_at = timezone.now()
         task.save()
         return ExportTask(**task.model_to_dict())
+
+    @staticmethod
+    def view_task_service(task_id: str) -> dict:
+        try:
+            task: Task = Task.objects.get(id=task_id, is_active=True)
+        except Exception:
+            raise DatabaseError()
+        return {
+            "message": f"`{task.title}` is fetched",
+            "data": ExportTask(**task.model_to_dict()).model_dump(),
+        }
+
+    @staticmethod
+    def archive_task_service(task_id: str) -> dict:
+        try:
+            task: Task = Task.objects.get(id=task_id, is_active=True)
+        except Exception:
+            raise DatabaseError()
+        task.is_active = False
+        task.save()
+        return {
+            "message": f"`{task.title}` is fetched",
+            "data": ExportTask(**task.model_to_dict()).model_dump(),
+        }
+
+    @staticmethod
+    def search_task_service(query: str, status: str, priority: str) -> Optional[ExportTaskList]:
+        try:
+            tasks = Task.objects.all()
+            if status:
+                tasks = tasks.filter(status=status)
+
+            if priority:
+                tasks = tasks.filter(priority=priority)
+        except Exception:
+            raise DatabaseError()
+        if tasks:
+            all_tasks = ExportTaskList(
+                subject_list=[
+                    ExportTask(
+                        **task_data.model_to_dict()
+                    )
+                    for task_data in tasks
+                ]
+            )
+            return all_tasks
+        else:
+            return None
