@@ -1,6 +1,9 @@
+from sqlite3 import DatabaseError
+from typing import Optional
+
 from tasks.export_types.request_data_types.add_task import AddTaskRequestType
 from tasks.export_types.request_data_types.edit_task import EditTaskRequestType
-from tasks.export_types.task_export_types.export_task import ExportTask
+from tasks.export_types.task_export_types.export_task import ExportTask, ExportTaskList
 from tasks.models.model.task_model import Task
 from tasks.serializers.task_serializer import TaskSerializer
 from tasks.services.const import STATUS_CHOICES, PRIORITY_CHOICES
@@ -114,3 +117,31 @@ class TaskServices:
             "message": f"`{task.title}` is fetched",
             "data": ExportTask(**task.model_to_dict()).model_dump(),
         }
+
+    @staticmethod
+    def archive_task_service(task_id: str) -> dict:
+        task: Task = Task.objects.get(id=task_id, is_active=True)
+        task.is_active = False
+        return {
+            "message": f"`{task.title}` is fetched",
+            "data": ExportTask(**task.model_to_dict()).model_dump(),
+        }
+
+    @staticmethod
+    def search_task_service() -> Optional[ExportTaskList]:
+        try:
+            tasks = Task.objects.filter(is_active=True)
+        except Exception:
+            raise DatabaseError()
+        if tasks:
+            all_tasks = ExportTaskList(
+                subject_list=[
+                    ExportTask(
+                        with_id=False, **task_data.model_to_dict()
+                    )
+                    for task_data in tasks
+                ]
+            )
+            return all_tasks
+        else:
+            return None
