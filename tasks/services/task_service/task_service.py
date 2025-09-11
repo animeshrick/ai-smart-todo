@@ -112,7 +112,10 @@ class TaskServices:
 
     @staticmethod
     def view_task_service(task_id: str) -> dict:
-        task: Task = Task.objects.get(id=task_id, is_active=True)
+        try:
+            task: Task = Task.objects.get(id=task_id, is_active=True)
+        except Exception:
+            raise DatabaseError()
         return {
             "message": f"`{task.title}` is fetched",
             "data": ExportTask(**task.model_to_dict()).model_dump(),
@@ -120,24 +123,33 @@ class TaskServices:
 
     @staticmethod
     def archive_task_service(task_id: str) -> dict:
-        task: Task = Task.objects.get(id=task_id, is_active=True)
+        try:
+            task: Task = Task.objects.get(id=task_id, is_active=True)
+        except Exception:
+            raise DatabaseError()
         task.is_active = False
+        task.save()
         return {
             "message": f"`{task.title}` is fetched",
             "data": ExportTask(**task.model_to_dict()).model_dump(),
         }
 
     @staticmethod
-    def search_task_service() -> Optional[ExportTaskList]:
+    def search_task_service(query: str, status: str, priority: str) -> Optional[ExportTaskList]:
         try:
-            tasks = Task.objects.filter(is_active=True)
+            tasks = Task.objects.all()
+            if status:
+                tasks = tasks.filter(status=status)
+
+            if priority:
+                tasks = tasks.filter(priority=priority)
         except Exception:
             raise DatabaseError()
         if tasks:
             all_tasks = ExportTaskList(
                 subject_list=[
                     ExportTask(
-                        with_id=False, **task_data.model_to_dict()
+                        **task_data.model_to_dict()
                     )
                     for task_data in tasks
                 ]

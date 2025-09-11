@@ -13,15 +13,29 @@ class SearchTaskView(APIView):
 
     def get(self, request):
         try:
-            print(f"request_data: {request.data}")
-            result = TaskServices.search_task_service()
-            return Response(
-                data={
-                    "message": (result.get("message")),
-                    "data": result.get("data"),
-                },
-                status=status.HTTP_201_CREATED,
-                content_type="application/json",
+            query = request.query_params.get("q")  # free-text search
+            status_filter = request.query_params.get("status")
+            priority_filter = request.query_params.get("priority")
+
+            result = TaskServices.search_task_service(
+                query=query,
+                status=status_filter,
+                priority=priority_filter,
             )
+            if result is None:
+                return Response(
+                    data={"message": "No data found for the given criteria."},
+                    status=status.HTTP_404_NOT_FOUND,
+                    content_type="application/json",
+                )
+            else:
+                return Response(
+                    data={
+                        "message": "Data is fetched`",
+                        "data": result.model_dump(),
+                    },
+                    status=status.HTTP_200_OK,
+                    content_type="application/json",
+                )
         except Exception as e:
             return ExceptionHandler().handle_exception(e)
