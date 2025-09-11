@@ -71,8 +71,15 @@ class TaskServices:
             task.category = request_data.category
 
         # validate & update tags
-        if validate_list_input(request_data.tags) and request_data.tags != task.tags:
-            task.tags = request_data.tags
+        # if validate_list_input(request_data.tags) and request_data.tags != task.tags:
+        #     task.tags = request_data.tags
+
+        if validate_list_input(request_data.tags):
+            for tag in request_data.tags:
+                if tag in task.tags:
+                    request_data.tags.remove(tag)
+                else:
+                    task.tags += tag + ","
 
         # validate & update due date
         if validate_string_input(
