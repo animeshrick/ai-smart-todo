@@ -42,21 +42,25 @@ class TaskServices:
 
         # validate & update status, priority
         if validate_string_input(request_data.status):
-            if request_data.status not in STATUS_CHOICES:
+            VALID_STATUSES = [choice[0] for choice in STATUS_CHOICES]
+            if request_data.status not in VALID_STATUSES:
                 suggestion = suggest_closest(request_data.status, STATUS_CHOICES)
-                msg = f"Invalid status value: '{request_data.status}'. Must be one of {STATUS_CHOICES}."
+                msg = f"Invalid status value: '{request_data.status}'. Must be one of {VALID_STATUSES}."
                 if suggestion:
                     msg += f" Did you mean '{suggestion}'?"
                 raise ValueError(msg)
             else:
                 if request_data.status.lower() == "completed":
                     task.completed_at = timezone.now()
+                else:
+                    task.completed_at = None
                 task.status = request_data.status
 
         if validate_string_input(request_data.priority):
-            if request_data.priority not in PRIORITY_CHOICES:
+            VALID_PRIORITY_CHOICES = [priority[0] for priority in PRIORITY_CHOICES]
+            if request_data.priority not in VALID_PRIORITY_CHOICES:
                 suggestion = suggest_closest(request_data.priority, PRIORITY_CHOICES)
-                msg = f"Invalid priority value: '{request_data.priority}'. Must be one of {PRIORITY_CHOICES}."
+                msg = f"Invalid priority value: '{request_data.priority}'. Must be one of {VALID_PRIORITY_CHOICES}."
                 if suggestion:
                     msg += f" Did you mean '{suggestion}'?"
                 raise ValueError(msg)
@@ -71,9 +75,6 @@ class TaskServices:
             task.category = request_data.category
 
         # validate & update tags
-        # if validate_list_input(request_data.tags) and request_data.tags != task.tags:
-        #     task.tags = request_data.tags
-
         if validate_list_input(request_data.tags):
             for tag in request_data.tags:
                 if tag in task.tags:
