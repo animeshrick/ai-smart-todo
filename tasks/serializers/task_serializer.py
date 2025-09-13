@@ -26,8 +26,7 @@ class TaskSerializer(serializers.ModelSerializer):
         if request.category and not validate_string_input(request.category):
             raise serializers.ValidationError(detail="Category should not be empty.")
 
-        if request.due_date:
-            if not validate_dateTime_input(convert_string_to_dateTime(request.due_date)):
+        if request.due_date and not validate_dateTime_input(request.due_date):
                 raise serializers.ValidationError(detail="Due date should not be empty.")
 
         if request.completed_at and not validate_dateTime_input(request.completed_at):
@@ -72,6 +71,7 @@ class TaskSerializer(serializers.ModelSerializer):
                 if validate_list_input(tag_list):
                     for tag in tag_list:
                         tag_string_list += tag + ","
+
             if not request.category:
                 ai_category = auto_categorize_task(request.title, request.description)
                 print(f"Onion_ai_category: {ai_category}")

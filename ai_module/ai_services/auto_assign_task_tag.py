@@ -31,6 +31,11 @@ except LookupError:
     nltk.download('stopwords')
 
 # =============================================================================
+# CONSTANTS
+# =============================================================================
+MAX_TEXT_LENGTH = 1024  # Limit text length for NLP processing to optimize performance
+
+# =============================================================================
 # 1. EXTRACT TAGS FROM TEXT
 # =============================================================================
 def extract_tags_from_text(title, description):
@@ -38,7 +43,9 @@ def extract_tags_from_text(title, description):
     Extract relevant tags from task title and description
     Returns: comma-separated string of tags
     """
-    text = f"{title} {description}".lower()
+    trimmed_description = description[:MAX_TEXT_LENGTH]
+    text = f"{title} {description[:MAX_TEXT_LENGTH]}".lower()
+
 
     # Method 1: Rule-based keyword extraction
     predefined_tags = {
@@ -69,13 +76,17 @@ def extract_tags_from_text(title, description):
             # Extract entities
             entities = [ent.text.lower() for ent in doc.ents
                         if ent.label_ in ['ORG', 'PRODUCT', 'EVENT', 'WORK_OF_ART']]
+            print(f"Onion_entities: {entities}")
             found_tags.extend(entities[:3])  # Limit to 3 entities
 
             # Extract important nouns
             important_nouns = [token.lemma_.lower() for token in doc
                                if token.pos_ == 'NOUN' and len(token.text) > 3
                                and not token.is_stop][:5]
+            print(f"Onion_important_nouns: {important_nouns}")
+
             found_tags.extend(important_nouns)
+            print(f"Onion_found_tags: {found_tags}")
 
         except Exception as e:
             print(f"spaCy processing error: {e}")
@@ -89,8 +100,8 @@ def extract_tags_from_text(title, description):
                            if word.isalnum() and word not in stop_words
                            and len(word) > 3][:5]
         found_tags.extend(important_words)
-    except:
-        pass
+    except Exception as e:
+        print(f"NLTK processing error: {e}")
 
     # Clean and deduplicate tags
     clean_tags = []
@@ -98,9 +109,11 @@ def extract_tags_from_text(title, description):
 
     for tag in found_tags:
         tag_clean = re.sub(r'[^\w\s]', '', str(tag)).strip().lower()
+        # print(f"Onion_tag_clean: {tag_clean}")
+
         if tag_clean and tag_clean not in seen and len(tag_clean) > 2:
             clean_tags.append(tag_clean)
             seen.add(tag_clean)
 
     # Limit to top 5 tags
-    return ','.join(clean_tags[:5])
+    return ','.join(clean_tags[:3])
