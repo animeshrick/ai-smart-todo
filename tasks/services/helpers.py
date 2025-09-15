@@ -30,7 +30,7 @@ def validate_dateTime_input(input_value):
 
     if validate_not_empty(input_value):
         try:
-            datetime.fromisoformat(input_value)
+            datetime.strptime(input_value, "%d.%m.%Y")
             return True
         except ValueError:
             return False

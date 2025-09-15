@@ -8,6 +8,7 @@ from rest_framework.response import Response
 
 
 class ExceptionHandler:
+    @staticmethod
     def get_handlers(self) -> dict:
         return {
             DatabaseError: {
