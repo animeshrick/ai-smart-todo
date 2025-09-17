@@ -138,6 +138,10 @@ class TaskServices:
     def search_task_service(query: str, status: str, priority: str) -> Optional[ExportTaskList]:
         try:
             tasks = Task.objects.all()
+            if query:
+                # tasks = tasks.filter(status=status)
+                print("Filter with query")
+
             if status:
                 tasks = tasks.filter(status=status)
 
@@ -147,7 +151,7 @@ class TaskServices:
             raise DatabaseError()
         if tasks:
             all_tasks = ExportTaskList(
-                subject_list=[
+                task_list=[
                     ExportTask(
                         **task_data.model_to_dict()
                     )
