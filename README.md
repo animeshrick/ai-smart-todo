@@ -91,3 +91,5 @@ A Django-based intelligent task management system with AI-powered features to en
 - **Approach**: Use heuristics or ML based on user history
 - **Example**: "You finish writing tasks faster in the evening — schedule this essay after 8 PM?"
 - **Implementation**: Start with simple rules + user history, can later train a recommender system
+
+
